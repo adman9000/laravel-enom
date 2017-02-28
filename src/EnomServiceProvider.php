@@ -1,11 +1,10 @@
-<?php namespace 131Studios\enomapi;
+<?php namespace studios131\enomapi;
 
 /**
  * @author  131 Studios <contact@131studios.com>
  */
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Routing\Router;
 
 class EnomServiceProvider extends ServiceProvider {
 

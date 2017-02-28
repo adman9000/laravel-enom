@@ -1,14 +1,8 @@
 <?php
 
-namespace 131studios\enomapi;
+namespace studios131\enomapi;
 
 use App\Http\Controllers\Controller;
-
-use App\Domains;
-use Event;
-use App\Events\WebsiteWasCreated;
-use App\Http\Requests;
-use App\Http\Requests\StoreWebsite;
 use Illuminate\Http\Request;
 
 
