@@ -7,8 +7,6 @@ use Illuminate\Support\ServiceProvider;
 
 class EnomServiceProvider extends ServiceProvider {
 
-	protected $defer = false;
-
 	public function boot() 
 	{
 		$this->publishes([
@@ -20,8 +18,8 @@ class EnomServiceProvider extends ServiceProvider {
 
 	public function register() 
 	{
-		$this->app->bind('enomapi', function($app) {
-			return new EnomController($app);
+		$this->app->bind('enom-api', function($app) {
+			return new EnomAPI($app);
 		});
 
 		$this->mergeConfigFrom(
