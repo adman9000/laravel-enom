@@ -1,0 +1,23 @@
+{
+    "name": "131studios/enom-api",
+    "description": "Enom API Integration for Laravel",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "131 Studios",
+            "email": "contact@131studios.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "illuminate/support": "~5.0"
+    },
+    "require-dev": {
+        "phpspec/phpspec": "~2.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "131studios\\enomapi\\": "src/"
+        }
+    }
+}
