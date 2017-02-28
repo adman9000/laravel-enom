@@ -1,6 +1,4 @@
-<?php
-
-namespace studios131\enomapi;
+<?php namespace otostudios\enomapi;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;

@@ -1,14 +1,13 @@
-<?php namespace studios131\enomapi;
+<?php namespace otostudios\enomapi;
 
 /**
  * @author  131 Studios <contact@131studios.com>
  */
-
 use Illuminate\Support\ServiceProvider;
 
 class EnomServiceProvider extends ServiceProvider {
 
-	protected	$defer = false;
+	protected $defer = false;
 
 	public function boot() 
 	{
@@ -22,7 +21,7 @@ class EnomServiceProvider extends ServiceProvider {
 	public function register() 
 	{
 		$this->app->bind('enomapi', function($app) {
-			return new EnomApi($app);
+			return new EnomController($app);
 		});
 
 		$this->mergeConfigFrom(
