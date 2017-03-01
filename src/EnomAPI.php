@@ -1,161 +1,132 @@
-<?php namespace otostudios\enomapi;
+<?php namespace onethirtyone\enomapi;
 
 class EnomAPI {
 
-    protected $tld;
-    protected $sld;
-    protected $url;
-    protected $host;
-    protected $domain;
-    protected $scheme;
-    protected $path;
-    protected $urlAttributes;
-    protected $xmlResponse;
+    /**
+     * Domain
+     * @var array
+     */
+    protected $domain = array();
 
-    public function setDomain($domain) 
-    {
-        return $this->parseUrl($domain);
-    } // setDomain
+    /**
+     * API URL String
+     * @var [type]
+     */
+    protected $apiString;
 
+    /**
+     * API Parameters
+     * @var array
+     */
+    protected $params = array();
+
+    
+    /**
+     * Parse domain for API calls
+     * @param  string $domain 
+     * @return void         
+     */
     public function parseUrl($domain) 
     {
+        if(strpos($domain,"://") === false && substr($domain,0,1) != "/") $domain =  "http://". $domain;
+
         $parts = parse_url($domain);
         $split = explode('.', str_replace('www.','',$parts['host']));
 
-        $this->domain = $domain;
-        $this->host = $parts['host'];
-        $this->scheme = $parts['scheme'];
-        $this->path = array_key_exists('path', $parts) ? $parts['path'] : null;
-        $this->sld = $split[0];
-        $this->tld = $split[1];
+        $this->domain['host'] = $parts['host'];
+        $this->domain['scheme'] = $parts['scheme'];
+        $this->domain['path'] = array_key_exists('path', $parts) ? $parts['path'] : null;
+        $this->domain['sld'] = $split[0];
+        $this->domain['tld'] = $split[1];
 
-        return true;
+        return $this->domain;
+
     } // parseUrl
 
 
-    public function checkAvailability() 
-    {   
-        $this->apiCall('check', ['sld' => $this->sld, 'tld' => $this->tld]);
-
-        return $this->getLastResponseCode() === 210;
-
-    } // checkAvailability
-
-    private function apiCall($command, $attributes = array())
+    /**
+     * Make API Call
+     * @param  string $command    
+     * @param  array  $attributes 
+     * @return void             
+     */
+    public function apiCall()
     {
-        foreach($attributes as $key => $value)
-        {
-            $this->urlAttributes .= "&{$key}={$value}";
-        }
-
-        $this->xmlResponse =  simplexml_load_file(config('enomapi.api_url') . "command={$command}&{$this->urlAttributes}&responsetype=xml&uid=".config('enomapi.enom_username') ."&pw=".config('enomapi.enom_password'));
+       return $this->xmlResponse =  simplexml_load_file($this->getApiString());
     } // apiCall
 
     /**
-     * Returns last XML Response Code
+     * Return last XML response code
+     * @return int 
      */
     public function getLastResponseCode() 
     {
         return (int)$this->xmlResponse->RRPCode;
     } // getLastResponseCode
-  
 
-    // /**
-    //  * Purchase Enom Domain
-    //  * @param Request $request 
-    //  */ 
-    // public function PurchaseEnomDomain(StoreWebsite $request) 
-    // {
-    //   // Local ENV bypass
-    //   if(env('APP_ENV') == 'local' || $request->tld == 'APP') 
-    //   {
-    //     return [
-    //       'success' =>  1,
-    //     ];
-    //   }
-
-    //   // API URL
-    //   if(env('APP_ENV') != 'production')
-    //   {
-    //     $urlargs = [
-    //       'domain' => 'https://resellertest.enom.com',
-    //       'dns' =>  'UseDNS=default'
-    //       ];
-    //   }
-    //   else
-    //   {
-    //     $urlargs = [
-    //       'domain'  =>  'https://enom.com',
-    //       'dns' =>  'NS1=ns1.131studios.com&NS2=ns2.131studios.com'
-    //     ];
-    //   }
-
-    //   // Validate URL
-    //   if(! $this->isValidURL($request->url, $request->tld))
-    //   {
-    //     return [
-    //       'success' =>  0,
-    //       'errorcode' =>  1,
-    //       'errormsg'  =>  'Invalid domain name',
-    //     ];
-    //   }
-      
-    //   $purchaseurl = simplexml_load_file( $this->enomUrl .'/interface.asp?Command=Purchase&UID='.ENV('ENOM_USER').'&PW='.ENV('ENOM_PASSWORD').'&SLD='.$request->url.'&TLD='.$request->tld.'&'.$urlargs['dns'].'&NumYears=1&ResponseType=XML');
-
-    //   // Perform actions based on results
-    //   switch ($purchaseurl->RRPCode) 
-    //   {
-    //     case 200:
-    //       // Store the website
-    //       $website = new Website;
-    //       $website->type = $request->sitetype;
-    //       $website->user_id = auth()->user()->id;
-    //       $website->domain = $request->url . '.' . strtolower($request->tld);
-    //       $website->save();
-
-    //       if(env('APP_ENV') != 'local' && $request->sitetype == 0)
-    //       {
-    //         // Store the domain order if we have one
-    //         $newdomain = new Domains;
-
-    //         $newdomain->order_id = $purchaseurl->OrderID;
-    //         $newdomain->domain = $request->url . '.' . $request->tld;
-    //         $newdomain->website_id = $website->id;
-    //         $newdomain->total_charged = $purchaseurl->TotalCharged;
-
-    //         $newdomain->save();
-    //       }
-
-    //       Event::fire(new WebsiteWasCreated($website));
-
-    //       $request->session()->flash('type', $request->sitetype);
-
-    //       return [
-    //         'success' =>  1,
-    //         'id'  =>  $website->id,
-    //       ];
-    //       break;
-    //     default:
-    //       return [
-    //         'success' =>  0,
-    //       ];
-    //       break;
-    //   }
-    // } // PurchaseEnomDomain
-    
-
-    // /**
-    //  * Show Terms of Service/Purchase
-    //  */
-    // public function ShowTerms() 
-    // {
-    //   $xml = simplexml_load_file( $this->enomUrl .'/interface.asp?Command=GetAgreementPage&UID='.ENV('ENOM_USER').'&PW='.ENV('ENOM_PASSWORD').'&ResponseType=XML');
-
-    //   echo $xml->content;
-    // } // ShowTerms
-
-    public function hello() 
+    /**
+     * Return API url string
+     * @return string 
+     */
+    public function getApiString() 
     {
-        return config('enomapi.api_url');
-    } // hello
+        $urlString = config('enomapi.api_url');
+        foreach($this->params as $key => $value)
+        {
+            $urlString .= "&{$key}={$value}";
+        }
+        return $this->setApiString($urlString);
+    } // getApiString
+
+    private function setApiString($string) 
+    {
+        $this->apiString = $string;
+        return $this->apiString;
+    } // setApiString
+
+    /**
+     * Gets the value of params.
+     *
+     * @return mixed
+     */
+    public function getParams()
+    {
+        return $this->params;
+    }
+
+    /**
+     * Checks for API Error
+     * @return boolean 
+     */
+    public function hasError() 
+    {
+        return (int)$this->xmlResponse->ErrCount !== 0;
+    } // hasError
+
+    /**
+     * Returns last API error message
+     * @return string 
+     */
+    public function getLastError() 
+    {
+        return 'API Error: ' . $this->xmlResponse->errors->Err1;
+    } // getLastError
+
+    /**
+     * Sets the value of params.
+     *
+     * @param mixed $params the params
+     *
+     * @return self
+     */
+    public function setParams($params)
+    {       
+        $this->params = $params;
+        $this->params['uid'] = config('enomapi.enom_username');
+        $this->params['pw'] = config('enomapi.enom_password');
+        $this->params['responseType'] = array_key_exists('responseType', $params) ? $params['responseType'] : 'XML';
+        $this->params['Display'] = array_key_exists('Display', $params) ? $params['Display'] : 100;
+ 
+        return $this;
+    }
 }

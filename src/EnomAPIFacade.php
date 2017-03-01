@@ -1,4 +1,4 @@
-<?php namespace otostudios\enomapi;
+<?php namespace onethirtyone\enomapi;
 
 use Illuminate\Support\Facades\Facade;
 

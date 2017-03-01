@@ -1,5 +1,5 @@
 {
-    "name": "otostudios/enomapi",
+    "name": "onethirtyone/enomapi",
     "description": "Enom API Integration for Laravel",
     "license": "MIT",
     "authors": [
@@ -14,7 +14,7 @@
     },
     "autoload": {
         "psr-4": {
-            "otostudios\\enomapi\\": "src/"
+            "onethirtyone\\enomapi\\": "src/"
         }
     }
 }

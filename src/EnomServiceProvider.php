@@ -1,4 +1,4 @@
-<?php namespace otostudios\enomapi;
+<?php namespace onethirtyone\enomapi;
 
 /**
  * @author  131 Studios <contact@131studios.com>
