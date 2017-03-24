@@ -27,6 +27,11 @@ class EnomAPI {
      * @var string
      */
     protected $urlString = null;
+
+    /**
+     * @var string
+     */
+    protected $xmlResponse;
  
 
     /**
@@ -67,12 +72,15 @@ class EnomAPI {
 
     /**
      * Make API Call
-     * @param  string $command    
-     * @param  array  $attributes 
-     * @return void             
+     * @return response
      */
-    public function call()
+    public function call($params = null)
     {
+        if($params) 
+        {
+            $this->setParam($params);
+        }
+
          return $this->xmlResponse = json_decode(json_encode(simplexml_load_file($this->getApiString())), TRUE);
     } // apiCall
 
@@ -82,7 +90,7 @@ class EnomAPI {
      */
     public function getLastResponseCode() 
     {
-        return (int) $this->xmlResponse-['RRPCode'];
+        return (int) $this->xmlResponse['RRPCode'];
     } // getLastResponseCode
 
     /**
