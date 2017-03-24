@@ -1,12 +1,14 @@
 <?php namespace onethirtyone\enomapi;
 
+use onethirtyone\enomapi\classes\Domain;
+
 class EnomAPI {
 
     /**
-     * Domain
+     * url
      * @var array
      */
-    protected $domain = array();
+    protected $url = array();
 
     /**
      * API URL String
@@ -20,29 +22,48 @@ class EnomAPI {
      */
     protected $params = array();
 
-    
     /**
-     * Parse domain for API calls
-     * @param  string $domain 
+     * API Url String
+     * @var string
+     */
+    protected $urlString = null;
+ 
+
+    /**
+     * Constructor
+     */
+    public function __construct() 
+    {
+       $this->params = ['uid' => config('enomapi.enom_username'),
+                        'pw' => config('enomapi.enom_password'),
+                        'responseType' => 'XML',
+                        'Display' => 100
+                        ];
+    }
+    /**
+     * Instantiates domain related api functions
+     * @return Domain
+     */
+    public function domain() 
+    {
+        return new Domain($this);
+    } 
+
+    /**
+     * Parse url for API calls
+     * @param  string $url 
      * @return void         
      */
-    public function parseUrl($domain) 
+    public function parseUrl($url) 
     {
-        if(strpos($domain,"://") === false && substr($domain,0,1) != "/") $domain =  "http://". $domain;
+        if(strpos($url,"://") === false && substr($url,0,1) != "/") $url =  "http://". $url;
 
-        $parts = parse_url($domain);
+        $parts = parse_url($url);
         $split = explode('.', str_replace('www.','',$parts['host']));
 
-        $this->domain['host'] = $parts['host'];
-        $this->domain['scheme'] = $parts['scheme'];
-        $this->domain['path'] = array_key_exists('path', $parts) ? $parts['path'] : null;
-        $this->domain['sld'] = $split[0];
-        $this->domain['tld'] = $split[1];
-
-        return $this->domain;
+        return $this->setParam(['sld' => $split[0], 'tld' => $split[1]]);
 
     } // parseUrl
-
 
     /**
      * Make API Call
@@ -50,9 +71,9 @@ class EnomAPI {
      * @param  array  $attributes 
      * @return void             
      */
-    public function apiCall()
+    public function call()
     {
-       return $this->xmlResponse =  simplexml_load_file($this->getApiString());
+         return $this->xmlResponse = json_decode(json_encode(simplexml_load_file($this->getApiString())), TRUE);
     } // apiCall
 
     /**
@@ -61,7 +82,7 @@ class EnomAPI {
      */
     public function getLastResponseCode() 
     {
-        return (int)$this->xmlResponse->RRPCode;
+        return (int) $this->xmlResponse-['RRPCode'];
     } // getLastResponseCode
 
     /**
@@ -70,29 +91,23 @@ class EnomAPI {
      */
     public function getApiString() 
     {
-        $urlString = config('enomapi.api_url');
-        foreach($this->params as $key => $value)
-        {
-            $urlString .= "&{$key}={$value}";
-        }
-        return $this->setApiString($urlString);
+        return $this->urlString ?: $this->setApiString();
     } // getApiString
 
-    private function setApiString($string) 
-    {
-        $this->apiString = $string;
-        return $this->apiString;
-    } // setApiString
-
     /**
-     * Gets the value of params.
-     *
-     * @return mixed
+     * Sets the API URL String
      */
-    public function getParams()
+    private function setApiString() 
     {
-        return $this->params;
-    }
+        $this->urlString = config('enomapi.api_url');
+
+        foreach($this->params as $key => $value)
+        {
+            $this->urlString .= "&{$key}={$value}";
+        }
+
+        return $this->urlString;
+    } // setApiString
 
     /**
      * Checks for API Error
@@ -100,7 +115,7 @@ class EnomAPI {
      */
     public function hasError() 
     {
-        return (int)$this->xmlResponse->ErrCount !== 0;
+        return (int) $this->xmlResponse['ErrCount'] !== 0;
     } // hasError
 
     /**
@@ -109,7 +124,7 @@ class EnomAPI {
      */
     public function getLastError() 
     {
-        return 'API Error: ' . $this->xmlResponse->errors->Err1;
+        return 'API Error: ' . $this->xmlResponse['errors']['Err1'];
     } // getLastError
 
     /**
@@ -119,14 +134,24 @@ class EnomAPI {
      *
      * @return self
      */
-    public function setParams($params)
+    public function setParam($param, $value = null)
     {       
-        $this->params = $params;
-        $this->params['uid'] = config('enomapi.enom_username');
-        $this->params['pw'] = config('enomapi.enom_password');
-        $this->params['responseType'] = array_key_exists('responseType', $params) ? $params['responseType'] : 'XML';
-        $this->params['Display'] = array_key_exists('Display', $params) ? $params['Display'] : 100;
- 
-        return $this;
+        if(is_array($param))
+        {
+          return  $this->params = array_replace($this->params, $param);
+        }
+
+        $this->params[$param] = $value;
+        
+        return  $this->params;
+    }
+
+    /**
+     * Gets paramaters array
+     * @return array 
+     */
+    public function getParams() 
+    {
+        return $this->params;
     }
 }
