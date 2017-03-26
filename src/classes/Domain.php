@@ -4,9 +4,23 @@ namespace onethirtyone\enomapi\classes;
 
 class Domain {
 
+	/**
+	 * Enom API Class
+	 * @var EnomAPI
+	 */
 	protected $api;
+
+	/**
+	 * Domain Available
+	 * @var boolean
+	 */
 	protected $available;
 
+
+	/**
+	 * Constructor
+	 * @param EnomAPI $api 
+	 */
 	public function __construct($api) 
 	{
 		$this->api = $api;
@@ -32,10 +46,10 @@ class Domain {
         {
             $this->api->setParam('UseDNS','default');
         }
+
 	    $this->api->parseUrl($url);
 	    $this->api->setParam('command','purchase');
 	    $this->api->setParam($params);
-	    return $this->api->getApiString();
 	    return $this->api->call();
 	}
 
@@ -68,9 +82,4 @@ class Domain {
 		$this->api->parseUrl($url);
 		return $this->api->call(['command' => 'GetDomainInfo']);
 	}
-
-
-
-
-
 }
