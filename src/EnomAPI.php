@@ -31,7 +31,7 @@ class EnomAPI {
     /**
      * @var string
      */
-    protected $xmlResponse;
+    protected $response;
  
 
     /**
@@ -81,16 +81,36 @@ class EnomAPI {
             $this->setParam($params);
         }
 
-         return $this->xmlResponse = json_decode(json_encode(simplexml_load_file($this->getApiString())), TRUE);
+        $this->response = json_decode(json_encode(simplexml_load_file($this->getApiString())), TRUE);
+
+        return $this;
     } // apiCall
+
+    /**
+     * Returns last XML response
+     * @return array 
+     */
+    public function getResponse() 
+    {
+        return $this->response;
+    }
+
+    /**
+     * Alias for getResponse
+     * @return array 
+     */
+    public function response() 
+    {
+        return $this->getResponse();
+    }
 
     /**
      * Return last XML response code
      * @return int 
      */
-    public function getLastResponseCode() 
+    public function responseCode() 
     {
-        return (int) $this->xmlResponse['RRPCode'];
+        return (int) $this->response['RRPCode'];
     } // getLastResponseCode
 
     /**
@@ -123,16 +143,16 @@ class EnomAPI {
      */
     public function hasError() 
     {
-        return (int) $this->xmlResponse['ErrCount'] !== 0;
+        return (int) $this->response['ErrCount'] !== 0;
     } // hasError
 
     /**
      * Returns last API error message
      * @return string 
      */
-    public function getLastError() 
+    public function getError() 
     {
-        return 'API Error: ' . $this->xmlResponse['errors']['Err1'];
+        return $this->response['errors']['Err1'];
     } // getLastError
 
     /**
@@ -162,4 +182,16 @@ class EnomAPI {
     {
         return $this->params;
     }
+
+    /**
+     * Returns XML single value
+     * @param  mixed $name 
+     * @return string       
+     */
+    public function __get($name) 
+    {
+        return isset($this->response) ? $this->response[$name] : 'undefined output';
+    }
+
+
 }

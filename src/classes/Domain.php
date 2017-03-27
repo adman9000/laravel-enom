@@ -16,7 +16,6 @@ class Domain {
 	 */
 	protected $available;
 
-
 	/**
 	 * Constructor
 	 * @param EnomAPI $api 
@@ -26,15 +25,14 @@ class Domain {
 		$this->api = $api;
 	}
 
-    /**
-     * @param $url
-     * @return int
-     */
-    public function check($url)
+	/**
+	 * Check availablity of domain
+	 * @param  string  $url 
+	 * @return boolean      
+	 */
+	public function isAvailable($url) 
 	{
-		$this->api->parseUrl($url);
-		$this->api->setParam(['command' =>'check']);
-		return $this->api->call()['RRPCode'] == 210 ? 1 : 0;
+		return $this->api->call(['command' => 'check'])->getResponse()['RRPCode'] == 210 ? true : false;
 	}
 
     /**
@@ -48,9 +46,9 @@ class Domain {
         }
 
 	    $this->api->parseUrl($url);
-	    $this->api->setParam('command','purchase');
-	    $this->api->setParam($params);
-	    return $this->api->call();
+	    $params['command'] = 'purchase';
+
+	    return $this->api->call($params);
 	}
 
 	/**
