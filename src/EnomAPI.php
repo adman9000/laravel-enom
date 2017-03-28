@@ -1,20 +1,10 @@
-<?php namespace onethirtyone\enomapi;
+<?php 
+
+namespace onethirtyone\enomapi;
 
 use onethirtyone\enomapi\classes\Domain;
 
 class EnomAPI {
-
-    /**
-     * url
-     * @var array
-     */
-    protected $url = array();
-
-    /**
-     * API URL String
-     * @var [type]
-     */
-    protected $apiString;
 
     /**
      * API Parameters
@@ -39,11 +29,12 @@ class EnomAPI {
      */
     public function __construct() 
     {
-       $this->params = ['uid' => config('enomapi.enom_username'),
-                        'pw' => config('enomapi.enom_password'),
-                        'responseType' => 'XML',
-                        'Display' => 100
-                        ];
+       $this->params = [
+                'uid' => config('enomapi.enom_username'),
+                'pw' => config('enomapi.enom_password'),
+                'responseType' => 'XML',
+                'Display' => 100
+                ];
     }
     /**
      * Instantiates domain related api functions
@@ -77,9 +68,7 @@ class EnomAPI {
     public function call($params = null)
     {
         if($params) 
-        {
             $this->setParam($params);
-        }
 
         $this->response = json_decode(json_encode(simplexml_load_file($this->getApiString())), TRUE);
 
@@ -87,21 +76,12 @@ class EnomAPI {
     } // apiCall
 
     /**
-     * Returns last XML response
+     * Return the API Response
      * @return array 
      */
-    public function getResponse() 
+    public function response($key = null) 
     {
-        return $this->response;
-    }
-
-    /**
-     * Alias for getResponse
-     * @return array 
-     */
-    public function response() 
-    {
-        return $this->getResponse();
+        return $key ? $this->response[$key] : $this->response;
     }
 
     /**
@@ -192,6 +172,4 @@ class EnomAPI {
     {
         return isset($this->response) ? $this->response[$name] : 'undefined output';
     }
-
-
 }

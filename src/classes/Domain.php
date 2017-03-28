@@ -58,7 +58,7 @@ class Domain {
 	 */
 	public function list($expired = false) 
 	{
-		return $this->api->call(['command' => ($expired ? 'GetExpiredDomains' : 'GetDomains')]);
+		return $this->api->call(['command' => ($expired ? 'GetExpiredDomains' : 'GetDomains')])->response();
 	}
 
 	/**
@@ -78,6 +78,6 @@ class Domain {
 	public function info($url) 
 	{
 		$this->api->parseUrl($url);
-		return $this->api->call(['command' => 'GetDomainInfo']);
+		return $this->api->call(['command' => 'GetDomainInfo'])->response();
 	}
 }
