@@ -32,6 +32,7 @@ class Domain {
 	 */
 	public function isAvailable($url) 
 	{
+		$this->api->parseUrl($url);
 		return $this->api->call(['command' => 'check'])->response()['RRPCode'] == 210 ? true : false;
 	}
 
