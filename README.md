@@ -7,7 +7,7 @@ A simple ENOM API Wrapper for Laravel.
 #### Install via Composer
 
 ```
-composer require onethirtyone/enom-api
+composer require onethirtyone/enomapi
 ```
 
 Add the following line to your `config/app.php`
