@@ -142,6 +142,18 @@ class Domain {
 	}
 
 	/**
+	 * Get nameservers
+	 * @param  string $url 
+	 * @return array      
+	 */
+	public function getDNS($url) {
+
+		$this->api->parseUrl($url);
+		return $this->api->call(['command' => 'GetDNS'])->response();
+
+	}
+	
+	/**
 	 * Set nameservers
 	 * @param  string $url 
 	 * @param  array $nameservers 
