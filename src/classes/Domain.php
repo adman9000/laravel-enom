@@ -216,4 +216,20 @@ class Domain {
 
 	}
 
+	/**
+	 * Renew/extend a domain name
+	 * @param string $url
+	 * @param number of years
+	 * @return array
+	 */
+	public function renew($url, $num_years) {
+		
+		$this->api->parseUrl($url);
+		return $this->api->call([
+			'command' => 'Extend',
+			'numYears' => $num_years
+		]);
+
+	}
+
 }
