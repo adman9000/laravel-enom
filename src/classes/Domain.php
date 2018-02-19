@@ -73,6 +73,18 @@ class Domain {
 		return $this->list(true);
 	}
 
+		/**
+	 * Lists domains expiring within $days days
+	 * @param  boolean $expired 
+	 * @return array           
+	 */
+	public function listExpiringWithin($days = 30) 
+	{
+        $this->api->setParam('DaysToExpired',$days);
+        $this->api->setParam('Tab','ExpiringNames');
+		return $this->api->call(['command' =>  'GetDomains'])->response();
+	}
+
 	/**
 	 * Displays detailed information about a domain
 	 * @param  string $url 

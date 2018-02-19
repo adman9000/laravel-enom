@@ -31,12 +31,7 @@ class EnomAPI {
      */
     public function __construct() 
     {
-       $this->params = [
-                'uid' => config('enomapi.enom_username'),
-                'pw' => config('enomapi.enom_password'),
-                'responseType' => 'XML',
-                'Display' => 100
-                ];
+        $this->resetParams();
     }
     /**
      * Instantiates domain related api functions
@@ -76,6 +71,9 @@ class EnomAPI {
             $this->setParam($params);
 
         $this->response = json_decode(json_encode(simplexml_load_file($this->getApiString())), TRUE);
+
+        //clear params for next call
+        $this->resetParams();
 
         return $this;
     } // apiCall
@@ -167,6 +165,23 @@ class EnomAPI {
     {
         return $this->params;
     }
+
+    /**
+     * Clear paramaters array
+     * @return true 
+     */
+    public function resetParams() 
+    {
+               $this->params = [
+                'uid' => config('enomapi.enom_username'),
+                'pw' => config('enomapi.enom_password'),
+                'responseType' => 'XML',
+                'Display' => 100
+                ];
+        return true;
+    }
+
+    
 
     /**
      * Returns XML single value

@@ -21,6 +21,6 @@ return [
 	 */
 	'api_url'	=>	env('APP_ENV') == 'local' 
 					? 'http://resellertest.enom.com/interface.asp?' 
-					: 'http://enom.com/interface.asp?',
+					: 'http://reseller.enom.com/interface.asp?',
 
 ];
