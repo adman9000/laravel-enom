@@ -23,7 +23,7 @@ class EnomServiceProvider extends ServiceProvider {
 		});
 
 		$this->mergeConfigFrom(
-			__DIR__.'/config/enom.php', 'enom');
+			__DIR__.'/config/enom.php', 'enomapi');
 
 	} // register
 }
