@@ -14,7 +14,7 @@
     },
     "autoload": {
         "psr-4": {
-            "adman9000\\laravel-enom\\": "src/"
+            "adman9000\\enom\\": "src/"
         }
     },
   "extra": {
