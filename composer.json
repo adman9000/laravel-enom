@@ -23,7 +23,7 @@
             "adman9000\\enom\\EnomServiceProvider"
         ],
         "aliases": {
-            "Coinmarketcap": "adman9000\\enom\\EnomAPIFacade"
+            "Enom": "adman9000\\enom\\EnomAPIFacade"
         }
     }
 }
