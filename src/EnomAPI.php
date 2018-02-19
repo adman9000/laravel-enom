@@ -1,8 +1,10 @@
 <?php 
+/**
+ * @author  Adman9000 <myaddressistaken@googlemail.com>
+ */
+namespace adman9000\enom;
 
-namespace onethirtyone\enomapi;
-
-use onethirtyone\enomapi\classes\Domain;
+use adman9000\enom\classes\Domain;
 
 class EnomAPI {
 
@@ -50,14 +52,17 @@ class EnomAPI {
      * @param  string $url 
      * @return void         
      */
-    public function parseUrl($url) 
+    public function parseUrl($url, $i=false) 
     {
         if(strpos($url,"://") === false && substr($url,0,1) != "/") $url =  "http://". $url;
 
         $parts = parse_url($url);
-        $split = explode('.', str_replace('www.','',$parts['host']));
+        $split = explode('.', str_replace('www.','',$parts['host']), 2);
 
-        return $this->setParam(['sld' => $split[0], 'tld' => $split[1]]);
+        if($i)
+            return $this->setParam(['sld'.$i => $split[0], 'tld'.$i => $split[1]]);
+        else
+            return $this->setParam(['sld' => $split[0], 'tld' => $split[1]]);
 
     } // parseUrl
 
@@ -99,7 +104,7 @@ class EnomAPI {
      */
     public function getApiString() 
     {
-        return $this->urlString ?: $this->setApiString();
+        return  $this->setApiString();
     } // getApiString
 
     /**

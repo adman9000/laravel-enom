@@ -1,6 +1,8 @@
 <?php 
-
-namespace onethirtyone\enomapi\classes;
+/**
+ * @author  Adman9000 <myaddressistaken@googlemail.com>
+ */
+namespace adman9000\enom\classes;
 
 class Domain {
 
@@ -81,7 +83,8 @@ class Domain {
 		$this->api->parseUrl($url);
 		return $this->api->call(['command' => 'GetDomainInfo'])->response();
 	}
-	
+
+
 	/**
 	 * Displays status of domain order
 	 * @param  string $url 
@@ -105,6 +108,16 @@ class Domain {
 		return $this->api->call(['command' => 'PE_GetProductPrice'])->response();
 	}
 
+	/**
+	 * Does this tld require extended attributes in order to be registered?
+	 * @param  string $url 
+	 * @return array      
+	 */
+	public function requiresExtendedAttributes($url) 
+	{
+		$this->api->parseUrl($url);
+		return $this->api->call(['command' => 'GetExtAttributes'])->response();
+	}
 
 	/**
 	 * Get Domain hosts records (not inc mx records)
@@ -172,4 +185,23 @@ class Domain {
 		return $this->api->call(['command' => 'ModifyNS'])->response();
 
 	}
+
+	/**
+	 * Initiate an inbound domain transfer
+	 * @param  string $url 
+	 * @return array      
+	 */
+	public function initiateTransferIn($url, $auth_key=false) {
+
+		$this->api->parseUrl($url, 1);
+		return $this->api->call([
+			'command' => 'TP_CreateOrder',
+			'OrderType' => 'Autoverification',
+			'DomainCount' => 1,
+			'AuthinfoX' => $auth_key,
+			'IncludeIDP' => 0
+		])->response();
+
+	}
+
 }

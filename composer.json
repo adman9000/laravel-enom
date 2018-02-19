@@ -1,11 +1,11 @@
 {
-    "name": "onethirtyone/enomapi",
+    "name": "adman9000/laravel-enom",
     "description": "Enom API Integration for Laravel",
     "license": "MIT",
     "authors": [
         {
-            "name": "131 Studios",
-            "email": "contact@131studios.com"
+            "name": "Adman9000",
+            "email": "myaddressistaken@googlemail.com"
         }
     ],
     "require": {
@@ -14,7 +14,7 @@
     },
     "autoload": {
         "psr-4": {
-            "onethirtyone\\enomapi\\": "src/"
+            "adman9000\\laravel-enom\\": "src/"
         }
     }
 }

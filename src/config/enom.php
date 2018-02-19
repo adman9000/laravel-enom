@@ -1,4 +1,8 @@
 <?php
+/**
+ * @author  Adman9000 <myaddressistaken@googlemail.com>
+ */
+ 
 return [
 	/**
 	 * Your enom reseller username
