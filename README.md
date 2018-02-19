@@ -10,7 +10,9 @@ A simple ENOM API Wrapper for Laravel.
 composer require adman9000/laravel-enom
 ```
 
-Add the following line to your `config/app.php`
+Utlises autoloading in Laravel 5.5+.
+
+For earlier versions add the following line to your `config/app.php`
 
 ```php
 'providers' => [
