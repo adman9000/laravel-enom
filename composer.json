@@ -16,5 +16,15 @@
         "psr-4": {
             "adman9000\\laravel-enom\\": "src/"
         }
+    },
+  "extra": {
+    "laravel": {
+        "providers": [
+            "adman9000\\enom\\EnomServiceProvider"
+        ],
+        "aliases": {
+            "Coinmarketcap": "adman9000\\enom\\EnomAPIFacade"
+        }
     }
+}
 }
