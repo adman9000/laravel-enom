@@ -232,4 +232,17 @@ class Domain {
 
 	}
 
+	/**
+	 * Get the autorenew status of a domain name
+	 * @param string $url
+	 * @return array
+	 */
+	public function getAutorenew($url) {
+		
+		$this->api->parseUrl($url);
+		return $this->api->call([
+			'command' => 'GetRenew'
+		])->response();
+
+	}
 }
